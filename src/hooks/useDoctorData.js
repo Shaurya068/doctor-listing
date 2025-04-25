@@ -13,7 +13,6 @@ const useDoctorData = () => {
     const [sortBy, setSortBy] = useState('');
     const [suggestions, setSuggestions] = useState([]);
 
-    // Get all unique specialties from the doctor data
     const allSpecialties = [
         ...new Set(
             doctors.flatMap(doctor =>
@@ -24,7 +23,6 @@ const useDoctorData = () => {
         )
     ].sort();
 
-    // Fetch doctors data from API
     useEffect(() => {
         const fetchDoctors = async () => {
             try {
@@ -37,14 +35,11 @@ const useDoctorData = () => {
 
                 const data = await response.json();
 
-                // Validate data structure
                 if (!Array.isArray(data)) {
                     throw new Error('Invalid data format: Expected array of doctors');
                 }
 
-                // Transform data if needed to match your expected structure
                 const transformedData = data.map(doctor => {
-                    // Parse fees string to numeric fee
                     let feeNumber = 0;
                     if (doctor.fees) {
                         const feeStr = doctor.fees.replace(/[^\d]/g, '');
@@ -53,11 +48,9 @@ const useDoctorData = () => {
 
                     return {
                         ...doctor,
-                        // Ensure specialities is always an array of objects with name
                         specialities: Array.isArray(doctor.specialities)
                             ? doctor.specialities.map(s => typeof s === 'string' ? { name: s } : s)
                             : [],
-                        // Map photo to image for consistency
                         image: doctor.photo || '',
                         fee: feeNumber
                     };
@@ -66,7 +59,6 @@ const useDoctorData = () => {
                 setDoctors(transformedData);
                 setFilteredDoctors(transformedData);
 
-                // Apply URL query parameters on initial load
                 const params = getUrlParams();
                 if (params.search) setSearchValue(params.search);
                 if (params.consultation) setConsultationType(params.consultation);
@@ -86,25 +78,20 @@ const useDoctorData = () => {
         fetchDoctors();
     }, []);
 
-    // Update suggestions when searchValue or doctors change
     useEffect(() => {
         if (!searchValue.trim()) {
             setSuggestions([]);
-            console.log('Suggestions cleared due to empty searchValue');
             return;
         }
         const matches = doctors
             .filter(doctor => doctor.name.toLowerCase().includes(searchValue.toLowerCase()))
             .slice(0, 3);
         setSuggestions(matches);
-        console.log('Suggestions updated:', matches);
     }, [searchValue, doctors]);
 
-    // Apply filters when any filter changes
     useEffect(() => {
         if (doctors.length === 0) return;
 
-        // Update URL parameters
         setUrlParams({
             search: searchValue,
             consultation: consultationType,
@@ -112,7 +99,6 @@ const useDoctorData = () => {
             sort: sortBy
         });
 
-        // Filter doctors
         const filtered = filterDoctors(
             doctors,
             searchValue,
@@ -124,7 +110,6 @@ const useDoctorData = () => {
         setFilteredDoctors(filtered);
     }, [doctors, searchValue, consultationType, selectedSpecialties, sortBy]);
 
-    // Handler functions
     const handleSearch = (value) => {
         setSearchValue(value);
     };
