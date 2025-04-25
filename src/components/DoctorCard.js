@@ -11,6 +11,7 @@ const DoctorCard = ({ doctor }) => {
                 {clinic.address && (
                     <p>
                         {clinic.address.address_line1 && <span>{clinic.address.address_line1}, </span>}
+                        <br />
                         {clinic.address.locality && <span>{clinic.address.locality}, </span>}
                         {clinic.address.city && <span>{clinic.address.city}</span>}
                     </p>
@@ -21,16 +22,6 @@ const DoctorCard = ({ doctor }) => {
 
     // Check if doctor object exists and provide default empty object if needed
     const safeDoctor = doctor || {};
-
-    // Safely extract specialties
-    const specialtiesText = safeDoctor.specialties && Array.isArray(safeDoctor.specialties)
-        ? safeDoctor.specialties.join(', ')
-        : 'Specialty not specified';
-
-    // Safely handle languages array
-    const languagesText = safeDoctor.languages && Array.isArray(safeDoctor.languages)
-        ? safeDoctor.languages.join(', ')
-        : 'Not specified';
 
     return (
         <div className="doctor-card" data-testid="doctor-card">
@@ -45,19 +36,8 @@ const DoctorCard = ({ doctor }) => {
             </div>
             <div className="doctor-info">
                 <h2 data-testid="doctor-name">{safeDoctor.name || 'Doctor'}</h2>
-                <p className="doctor-intro">{safeDoctor.doctor_introduction || 'No introduction available'}</p>
-
-                <p data-testid="doctor-specialty">{specialtiesText}</p>
-
-                <p data-testid="doctor-experience">
-                    {safeDoctor.experience || 'Experience not available'}
-                </p>
 
                 {renderClinicInfo(safeDoctor.clinic)}
-
-                <div className="languages">
-                    Languages: {languagesText}
-                </div>
             </div>
             <div className="doctor-fee">
                 <p data-testid="doctor-fee">{safeDoctor.fee ? `₹ ${safeDoctor.fee}` : 'Fee not specified'}</p>

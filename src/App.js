@@ -31,6 +31,7 @@ function App() {
           suggestions={suggestions}
           onSearchChange={handleSearch}
           onSearchSelect={handleSearchSelect}
+          showSuggestions={true}
         />
       </header>
 
