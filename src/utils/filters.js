@@ -4,7 +4,7 @@
  * @param {String} searchTerm - Search term for doctor names
  * @param {String} consultationType - Type of consultation (Video Consult, In Clinic)
  * @param {Array} specialties - Array of selected specialties
- * @param {String} sortBy - Sort option (fees, experience)
+ * @param {String} sortBy - Sort option (fee, experience)
  * @returns {Array} - Filtered and sorted doctors
  */
 export const filterDoctors = (doctors, searchTerm, consultationType, specialties, sortBy) => {
@@ -57,7 +57,7 @@ export const filterDoctors = (doctors, searchTerm, consultationType, specialties
 /**
  * Sort doctors by the given sort option
  * @param {Array} doctors - Array of doctor objects
- * @param {String} sortBy - Sort option (fees, experience)
+ * @param {String} sortBy - Sort option (fee, experience)
  * @returns {Array} - Sorted doctors
  */
 export const sortDoctors = (doctors, sortBy) => {
@@ -67,11 +67,11 @@ export const sortDoctors = (doctors, sortBy) => {
 
     try {
         switch (sortBy) {
-            case 'fees':
+            case 'fee':
                 sorted.sort((a, b) => {
-                    // Extract numeric values from fee strings (e.g., "₹ 500" -> 500)
-                    const feeA = a && a.fees ? parseInt(a.fees.replace(/[^\d]/g, '')) : 0;
-                    const feeB = b && b.fees ? parseInt(b.fees.replace(/[^\d]/g, '')) : 0;
+                    // Extract numeric values from fee strings or fee number property
+                    const feeA = a && (a.fee || a.fees) ? parseInt((a.fee || a.fees).toString().replace(/[^\d]/g, '')) : 0;
+                    const feeB = b && (b.fee || b.fees) ? parseInt((b.fee || b.fees).toString().replace(/[^\d]/g, '')) : 0;
 
                     // Handle NaN cases
                     if (isNaN(feeA)) return isNaN(feeB) ? 0 : 1;
